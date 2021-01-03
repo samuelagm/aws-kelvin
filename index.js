@@ -3,6 +3,12 @@ const { AwsResources } = require("./lib/aws");
 const express = require("express");
 const { graphqlHTTP } = require("express-graphql");
 const { buildSchema } = require("graphql");
+const showdown = require("showdown");
+
+converter = new showdown.Converter({
+  completeHTMLDocument: true,
+  omitExtraWLInCodeBlocks: true,
+});
 
 // Construct a schema, using GraphQL schema language
 var schema = buildSchema(`
@@ -38,15 +44,39 @@ var root = {
 
 var app = express();
 app.use(
-  "/graphql",
+  "/",
   graphqlHTTP({
     schema: schema,
     rootValue: root,
-    graphiql: true,
+    graphiql: {
+      defaultQuery:`
+      #Please find an example below, also replace the credentials with valid ones, and ensure
+      #the acount has a AWS TAG's permission
+      
+      query{
+        list(accessKeyId:"AKIA.......", secretAccessKey:"WJ............", region:"eu-west-1"){
+          items{
+            partition
+            service
+            region
+            accountId
+            resourceType
+            resourceId
+          }
+          count
+        }
+      }`
+    },
   })
 );
-app.use("/", (i, o) => {
-  o.json({ message: "head to /graphql" });
-});
+
+
+// app.use("/", (req, res) => {
+//   html = converter.makeHtml(example);
+//   res.set("Content-Type", "text/html");
+//   res.send(Buffer.from(html));
+// });
 app.listen(process.env.PORT);
-console.log(`Running a GraphQL API server at http://localhost:${process.env.PORT}/graphql`);
+console.log(
+  `Running a GraphQL API server at http://localhost:${process.env.PORT}/graphql`
+);
