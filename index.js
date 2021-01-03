@@ -48,5 +48,5 @@ app.use(
 app.use("/", (i, o) => {
   o.json({ message: "head to /graphql" });
 });
-app.listen(4000);
-console.log("Running a GraphQL API server at http://localhost:4000/graphql");
+app.listen(process.env.PORT);
+console.log(`Running a GraphQL API server at http://localhost:${process.env.PORT}/graphql`);
