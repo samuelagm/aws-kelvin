@@ -3,12 +3,7 @@ const { AwsResources } = require("./lib/aws");
 const express = require("express");
 const { graphqlHTTP } = require("express-graphql");
 const { buildSchema } = require("graphql");
-const showdown = require("showdown");
 
-converter = new showdown.Converter({
-  completeHTMLDocument: true,
-  omitExtraWLInCodeBlocks: true,
-});
 
 // Construct a schema, using GraphQL schema language
 var schema = buildSchema(`
@@ -52,7 +47,7 @@ app.use(
       defaultQuery:`
       #Please find an example below, also replace the credentials with valid ones, and ensure
       #the acount has a AWS TAG's permission
-      
+
       query{
         list(accessKeyId:"AKIA.......", secretAccessKey:"WJ............", region:"eu-west-1"){
           items{
